@@ -1,6 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.test import TestCase
-from .models import User
+from .models import User, Post
 
 class UserModelTestCase(TestCase):
     def setUp(self):
@@ -153,6 +153,54 @@ class UserModelTestCase(TestCase):
             bio='Hi, my name is Jane.'
         )
         return user
+
+
+
+class PostModelTestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            '@johndoe',
+            first_name='John',
+            last_name='Doe',
+            email='johndoe@example.org',
+            password='Password123',
+            bio='Hi, my name is John.'
+        )
+        self.user.full_clean()
+        self.post = Post.objects.create(
+            author = self.user,
+            text = 'This is a post',
+        )
+
+    def test_valid_post(self):
+        self._assert_post_is_valid()
+
+    def test_author_must_not_be_blank(self):
+        self.post.author = None
+        self._assert_post_is_invalid()
+
+    def test_author_is_deleted(self):
+        self.user.delete()
+        self._assert_post_is_invalid()
+
+    def test_text_may_contain_280_characters(self):
+        self.post.text = 'x' * 280
+        self._assert_post_is_valid()
+
+    def test_text_must_not_contain_more_than_280_characters(self):
+        self.post.text = 'x' * 281
+        self._assert_post_is_invalid()
+
+    def _assert_post_is_valid(self):
+        try:
+            self.post.full_clean()
+        except (ValidationError):
+            self.fail('Test post should be valid')
+
+    def _assert_post_is_invalid(self):
+        with self.assertRaises(ValidationError):
+            self.post.full_clean()
+
 
 """def factorial(integer):
     if integer<0:
