@@ -1,6 +1,7 @@
+"""Unit tests for the User model"""
 from django.core.exceptions import ValidationError
 from django.test import TestCase
-from .models import User, Post
+from microblogs.models import User, Post
 
 class UserModelTestCase(TestCase):
     def setUp(self):
