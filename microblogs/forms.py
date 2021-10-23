@@ -1,6 +1,6 @@
 from django.core.validators import RegexValidator
 from django import forms
-from .models import User
+from .models import User, Post
 
 class SignUpForm(forms.ModelForm):
     class Meta:
@@ -24,3 +24,9 @@ class SignUpForm(forms.ModelForm):
         password_confirmation = self.cleaned_data.get('password_confirmation')
         if new_password != password_confirmation:
             self.add_error('password_confirmation', 'Confirmation does not match password.')
+
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ['text']
+        widgets = { 'text': forms.Textarea() }
