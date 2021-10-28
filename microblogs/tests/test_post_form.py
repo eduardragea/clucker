@@ -4,4 +4,4 @@ from microblogs.forms import PostForm
 from microblogs.models import User, Post
 
 class PostFormTest(TestCase):
-    
+    pass
