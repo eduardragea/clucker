@@ -1,10 +1,16 @@
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
-from .forms import LogInForm, SignUpForm
+from .forms import LogInForm, SignUpForm, PostForm
+from .models import User
 
 def feed(request):
-    return render(request, 'feed.html')
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        if(form.is_valid()):
+            post = form.save()
+    form = PostForm()
+    return render(request, 'feed.html', {'form': form})
 
 def log_in(request):
     if request.method == 'POST':
@@ -37,3 +43,7 @@ def sign_up(request):
     else:
         form = SignUpForm()
     return render(request, 'sign_up.html', {'form': form})
+
+def user_list(request):
+    user_list = User.objects.all()
+    return render(request, 'user_list.html', {'user_list': user_list})
