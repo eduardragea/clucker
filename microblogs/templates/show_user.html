@@ -1,0 +1,15 @@
+<html>
+<head>
+  <title>Clucker</title>
+</head>
+<body>
+  <h1>Show User</h1>
+    <form action="{% url 'show_user' id %}" method="post">
+      <div>Username: @{{ user['username'] }}</div>
+      <div>First Name: {{ user['first_name'] }}</div>
+      <div>Last Name: {{ user['last_name'] }}</div>
+      <div>Email: {{ user['email'] }}</div>
+      <div>Bio: {{ user['bio'] }}</div>
+    </form>
+</body>
+</html>
