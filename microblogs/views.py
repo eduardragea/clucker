@@ -7,15 +7,28 @@ from .models import User
 def feed(request):
     if request.method == 'POST':
         form = PostForm(request.POST)
-        if(form.is_valid()):
+        if form.is_valid() :
             post = form.save()
     form = PostForm()
+    return render(request, 'feed.html', {'form': form})
+
+def new_post(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        user = request.User
+        form.author = user
+        if form.is_valid():
+            if user.is_authenticated:
+                post = form.save()
+                return redirect('feed')
+    else:
+        form = PostForm()
     return render(request, 'feed.html', {'form': form})
 
 def log_in(request):
     if request.method == 'POST':
         form = LogInForm(request.POST)
-        if(form.is_valid()):
+        if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
